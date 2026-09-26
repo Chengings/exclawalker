@@ -58,6 +58,9 @@ asm-bench: release asm
 # Install the Rust binary to ~/.local/bin or fallback to /usr/local/bin
 install: release (_install "target/release" / binary_name binary_name)
 
+# Install the assembly port for this platform the same way; pass a name to keep both
+asm-install name=binary_name: asm (_install "target/asm" / binary_name name)
+
 # Copy SRC to ~/.local/bin/NAME, or to /usr/local/bin/NAME with sudo.
 # `install` rather than `cp`: on macOS it writes a new file and renames it into
 # place, whereas `cp` overwrites in place, and a signed binary rewritten in place
