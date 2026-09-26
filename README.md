@@ -26,11 +26,26 @@ the result (`!a !e !t`) into fzf.
 
 ## Install
 
+Needs [just](https://github.com/casey/just). Builds the release binary and installs
+it to `~/.local/bin`, or to `/usr/local/bin` with `sudo` if that isn't writable:
+
 ```
-cargo install --path .
+just install
 ```
 
-Or build a release binary:
+Or install the assembly port instead (arm64 macOS or aarch64 Linux):
+
+```
+just asm-install
+```
+
+Both install as `exclawalker`, so the second replaces the first. Pass a name to
+keep both, for example `just asm-install exclawalker-asm`.
+
+Avoid `cargo install --path .` alongside these: it installs to `~/.cargo/bin`, and
+whichever directory comes first in `PATH` silently wins.
+
+Or build a release binary without installing:
 
 ```
 cargo build --release
