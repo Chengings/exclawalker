@@ -52,3 +52,21 @@ cargo build --release
 ```
 
 The binary will be at `target/release/exclawalker`.
+
+## Assembly ports
+
+Hand-written ports that print exactly what the Rust build prints for ASCII input:
+
+- `asm/exclawalker-macos.s` — arm64 macOS, links libSystem
+- `asm/exclawalker-linux.s` — aarch64 Linux (for example, Raspberry Pi 5), static,
+  raw syscalls
+
+```
+just asm         # build to target/asm/exclawalker
+just asm-test    # differential tests against the Rust release build
+just asm-bench   # benchmark against the Rust release build (needs hyperfine)
+```
+
+Differences from the Rust build: input is treated as ASCII (a non-ASCII character
+comes out as one `!` per byte), and a line longer than 64 KiB after trimming fails
+with `line too long`.
