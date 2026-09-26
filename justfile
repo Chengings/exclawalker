@@ -33,21 +33,26 @@ clippy:
 clean:
     cargo clean
 
-# Install the binary to ~/.local/bin or fallback to /usr/local/bin
-install: release
+# Install the Rust binary to ~/.local/bin or fallback to /usr/local/bin
+install: release (_install "target/release" / binary_name binary_name)
+
+# Copy SRC to ~/.local/bin/NAME, or to /usr/local/bin/NAME with sudo.
+# `install` rather than `cp`: on macOS it writes a new file and renames it into
+# place, whereas `cp` overwrites in place, and a signed binary rewritten in place
+# can be killed at launch (the kernel caches its signature per file).
+_install src name:
     #!/usr/bin/env sh
     set -eu
-    BINARY="target/release/{{binary_name}}"
     LOCAL_BIN="$HOME/.local/bin"
     SYSTEM_BIN="/usr/local/bin"
 
     # Try to create and use ~/.local/bin
     if mkdir -p "$LOCAL_BIN" 2>/dev/null && [ -w "$LOCAL_BIN" ]; then
-        cp "$BINARY" "$LOCAL_BIN/{{binary_name}}"
-        echo "Installed {{binary_name}} to $LOCAL_BIN"
+        install -m 755 "{{src}}" "$LOCAL_BIN/{{name}}"
+        echo "Installed {{src}} as $LOCAL_BIN/{{name}}"
         echo "Make sure $LOCAL_BIN is in your PATH"
     else
         echo "Cannot use $LOCAL_BIN, falling back to $SYSTEM_BIN (requires sudo)"
-        sudo cp "$BINARY" "$SYSTEM_BIN/{{binary_name}}"
-        echo "Installed {{binary_name}} to $SYSTEM_BIN"
+        sudo install -m 755 "{{src}}" "$SYSTEM_BIN/{{name}}"
+        echo "Installed {{src}} as $SYSTEM_BIN/{{name}}"
     fi
