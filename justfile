@@ -39,6 +39,14 @@ asm:
     mkdir -p target/asm
     clang -arch arm64 -Wl,-x -Wl,-dead_strip -o target/asm/{{binary_name}} asm/{{binary_name}}-macos.s
 
+# Build the assembly port for this platform (aarch64 Linux, static)
+[linux]
+asm:
+    @test "$(uname -m)" = aarch64 || { echo "asm: the Linux port is AArch64-only; this machine is $(uname -m)" >&2; exit 1; }
+    mkdir -p target/asm
+    as -o target/asm/{{binary_name}}.o asm/{{binary_name}}-linux.s
+    ld -static -s -o target/asm/{{binary_name}} target/asm/{{binary_name}}.o
+
 # Install the Rust binary to ~/.local/bin or fallback to /usr/local/bin
 install: release (_install "target/release" / binary_name binary_name)
 
