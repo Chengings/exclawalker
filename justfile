@@ -33,6 +33,12 @@ clippy:
 clean:
     cargo clean
 
+# Build the assembly port for this platform (arm64 macOS)
+[macos]
+asm:
+    mkdir -p target/asm
+    clang -arch arm64 -Wl,-x -Wl,-dead_strip -o target/asm/{{binary_name}} asm/{{binary_name}}-macos.s
+
 # Install the Rust binary to ~/.local/bin or fallback to /usr/local/bin
 install: release (_install "target/release" / binary_name binary_name)
 
