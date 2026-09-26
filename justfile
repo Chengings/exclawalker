@@ -51,6 +51,10 @@ asm:
 asm-test: release asm
     asm/test.sh
 
+# Benchmark assembly port vs Rust release build (needs hyperfine)
+asm-bench: release asm
+    asm/bench.sh
+
 # Install the Rust binary to ~/.local/bin or fallback to /usr/local/bin
 install: release (_install "target/release" / binary_name binary_name)
 
