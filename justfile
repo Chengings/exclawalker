@@ -47,6 +47,10 @@ asm:
     as -o target/asm/{{binary_name}}.o asm/{{binary_name}}-linux.s
     ld -static -s -o target/asm/{{binary_name}} target/asm/{{binary_name}}.o
 
+# Differential tests: assembly port vs Rust release build
+asm-test: release asm
+    asm/test.sh
+
 # Install the Rust binary to ~/.local/bin or fallback to /usr/local/bin
 install: release (_install "target/release" / binary_name binary_name)
 
